@@ -19,7 +19,7 @@ namespace FullStackAuth_WebAPI.Controllers
         private readonly IAuthenticationManager _authManager;
         private readonly ILogger<AuthenticationController> _logger;
 
-        // Constructor for dependency injection
+       
         public AuthenticationController(ILogger<AuthenticationController> logger, IMapper mapper, UserManager<User> userManager, IAuthenticationManager authManager)
         {
             _logger = logger;
@@ -36,7 +36,7 @@ namespace FullStackAuth_WebAPI.Controllers
             var user = _mapper.Map<User>(userForRegistration);
             
 
-            _logger.LogInformation($"UserType Set in User: {user.UserType}"); // Add this line
+            _logger.LogInformation($"UserType Set in User: {user.UserType}"); 
 
             var result = await _userManager.CreateAsync(user, userForRegistration.Password);
             if (!result.Succeeded)

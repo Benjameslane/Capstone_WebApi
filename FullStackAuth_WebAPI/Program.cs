@@ -27,13 +27,14 @@ namespace FullStackAuth_WebAPI
             builder.Services.ConfigureIdentity();
             builder.Services.ConfigureJWT(builder.Configuration);
             builder.Services.AddScoped<IAuthenticationManager, AuthenticationManager>();
+            builder.Services.AddScoped<FoodItemService>();
             builder.Services.AddControllers();
 
-            // Register GooglePlacesService
+         
             builder.Services.AddHttpClient<GooglePlacesService>(client =>
             {
                 client.BaseAddress = new Uri("https://maps.googleapis.com/maps/api/place/");
-                // Configure other HttpClient settings if necessary
+                
             });
 
             // Swagger configuration...
