@@ -2,6 +2,7 @@ using FullStackAuth_WebAPI.ActionFilters;
 using FullStackAuth_WebAPI.Contracts;
 using FullStackAuth_WebAPI.Extensions;
 using FullStackAuth_WebAPI.Managers;
+using FullStackAuth_WebAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -17,7 +18,7 @@ namespace FullStackAuth_WebAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            // Existing service registrations...
             builder.Services.ConfigureCors();
             builder.Services.ConfigureMySqlContext(builder.Configuration);
             builder.Services.AddAutoMapper(typeof(Program));
@@ -28,20 +29,25 @@ namespace FullStackAuth_WebAPI
             builder.Services.AddScoped<IAuthenticationManager, AuthenticationManager>();
             builder.Services.AddControllers();
 
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            // Register GooglePlacesService
+            builder.Services.AddHttpClient<GooglePlacesService>(client =>
+            {
+                client.BaseAddress = new Uri("https://maps.googleapis.com/maps/api/place/");
+                // Configure other HttpClient settings if necessary
+            });
+
+            // Swagger configuration...
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // Existing middleware configurations...
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            
-
             app.UseHttpsRedirection();
             app.UseCors("CorsPolicy");
             app.UseForwardedHeaders(new ForwardedHeadersOptions
@@ -49,11 +55,8 @@ namespace FullStackAuth_WebAPI
                 ForwardedHeaders = ForwardedHeaders.All
             });
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
-
-
             app.MapControllers();
 
             app.Run();
