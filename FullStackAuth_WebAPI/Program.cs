@@ -3,12 +3,7 @@ using FullStackAuth_WebAPI.Contracts;
 using FullStackAuth_WebAPI.Extensions;
 using FullStackAuth_WebAPI.Managers;
 using FullStackAuth_WebAPI.Services;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace FullStackAuth_WebAPI
 {
@@ -28,6 +23,9 @@ namespace FullStackAuth_WebAPI
             builder.Services.ConfigureJWT(builder.Configuration);
             builder.Services.AddScoped<IAuthenticationManager, AuthenticationManager>();
             builder.Services.AddScoped<FoodItemService>();
+            builder.Services.AddScoped<StoreFoodItemService>();
+            builder.Services.AddScoped<SpoonacularService>();
+            builder.Services.AddScoped<UsersService>();
             builder.Services.AddControllers();
 
          
@@ -35,6 +33,12 @@ namespace FullStackAuth_WebAPI
             {
                 client.BaseAddress = new Uri("https://maps.googleapis.com/maps/api/place/");
                 
+            });
+
+            builder.Services.AddHttpClient<SpoonacularService>(client =>
+            {
+                client.BaseAddress = new Uri("https://api.spoonacular.com/");
+
             });
 
             // Swagger configuration...

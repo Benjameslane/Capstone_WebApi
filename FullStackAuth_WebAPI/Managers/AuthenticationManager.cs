@@ -52,6 +52,7 @@ namespace FullStackAuth_WebAPI.Managers
             var claims = new List<Claim>
             {
                 new Claim("userName", _user.UserName),
+                new Claim("userType", _user.UserType),
                 new Claim("email", _user.Email),
                 new Claim("id", _user.Id)
             };

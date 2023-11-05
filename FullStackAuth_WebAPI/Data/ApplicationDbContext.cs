@@ -9,6 +9,7 @@ namespace FullStackAuth_WebAPI.Data
     {
         public DbSet<Car> Cars { get; set; }
         public DbSet<FoodItem> FoodItems { get; set; }
+        public DbSet<StoreFoodItem> StoreFoodItems { get; set; }
         public ApplicationDbContext(DbContextOptions options)
     : base(options)
         {

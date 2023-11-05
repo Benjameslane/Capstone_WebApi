@@ -1,8 +1,9 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using FullStackAuth_WebAPI.DataTransferObjects;
 using Newtonsoft.Json;
 using FullStackAuth_WebAPI.Models;
+using FullStackAuth_WebAPI.DataTransferObjects.GooglePlaces;
+using FullStackAuth_WebAPI.DataTransferObjects.GoogleTextSearch;
 
 namespace FullStackAuth_WebAPI.Services
 {
@@ -18,7 +19,7 @@ namespace FullStackAuth_WebAPI.Services
 
         public async Task<IEnumerable<FoodShelter>> GetNearbyFoodSheltersAsync(double latitude, double longitude)
         {
-            var url = $"nearbysearch/json?location={latitude},{longitude}&radius=5000&type=food&key={_apiKey}";
+            var url = $"nearbysearch/json?location={latitude},{longitude}&radius=50000&keyword=food%20shelter&key={_apiKey}";
             var response = await _httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();
 
@@ -32,6 +33,22 @@ namespace FullStackAuth_WebAPI.Services
                 Latitude = r.Geometry.Location.Lat,
                 Longitude = r.Geometry.Location.Lng
             });
+        }
+
+        public async Task<UserLocation> GetUserLocationAsync(string address)
+        {
+            var url = $"textsearch/json?query={address}&key={_apiKey}";
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            var content = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<GoogleTextSearchResponseDto>(content);
+
+            return new UserLocation
+            {
+                Latitude = result.Results[0].Geometry.Location.Lat,
+                Longitude = result.Results[0].Geometry.Location.Lng
+            };
         }
     }
 }

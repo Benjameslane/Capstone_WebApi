@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace FullStackAuth_WebAPI.DataTransferObjects
+namespace FullStackAuth_WebAPI.DataTransferObjects.GooglePlaces
 {
     public class GooglePlacesResponseDto
     {
